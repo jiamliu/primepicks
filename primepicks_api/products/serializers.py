@@ -1,6 +1,12 @@
 from rest_framework import serializers
-from .models import Product, Review
+from .models import Product, Review, ProductImage
 from categories.models import Category
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image', 'caption']
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,6 +21,8 @@ class ReviewSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, read_only=True)
     categories = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), many=True)
+    images = ProductImageSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = Product
