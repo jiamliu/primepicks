@@ -1,16 +1,16 @@
 .header {
-    height : 60px;
-    display : flex;
+    height: 60px;
+    display: flex;
     align-items: center;
     background-color: #041122;
     position: sticky;
     top: 0;
-    z-index:100;
+    z-index: 100;
 }
 
 .logo {
     width: 120px;
-    object-fit : contain;
+    object-fit: contain;
     margin: 0 20px;
     margin-top: 1px;
     width: 15%;
@@ -21,6 +21,7 @@
     flex: 1;
     align-items: center;
     border-radius: 24px;
+    position: relative;
 }
 
 .header__searchIcon {
@@ -69,3 +70,42 @@
     margin-left: 10px;
     margin-right: 10px;
 }
+
+.header__searchSuggestions {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    width: calc(100% - 40px);
+    max-height: 500px;
+    overflow-y: hidden;
+    z-index: 1;
+    top: 100%;
+    left: 0;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header__searchSuggestion {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.header__searchSuggestion:hover {
+    background-color: #f1f1f1;
+}
+
+.header__icon {
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+
+
+
+
+
+  
+  
