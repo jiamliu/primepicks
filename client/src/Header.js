@@ -1,35 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Header.css';
 import logo from './primepicks.png';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categories, setCategories] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
+  const navigate = useNavigate();
 
-  const placeholderCategories = Array.from({ length: 10 }, (_, i) => ({
-    id: `placeholder-${i}`,
-    name: `Category ${i + 1}`
-  }));
+  const placeholderCategories = useRef(
+    Array.from({ length: 10 }, (_, i) => ({
+      id: `placeholder-${i}`,
+      name: `Category ${i + 1}`,
+    }))
+  ).current;
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/categories/categories/');
       const data = await response.json();
-      console.log('Fetched categories:', data);
       if (Array.isArray(data)) {
         const sortedCategories = data.sort((a, b) => a.name.localeCompare(b.name));
         const combinedCategories = [...sortedCategories, ...placeholderCategories].slice(0, 10);
         setCategories(combinedCategories);
-        console.log('Combined categories:', combinedCategories);
       } else {
         console.error('Unexpected response format:', data);
       }
@@ -37,29 +35,32 @@ function Header() {
       console.error('Error fetching categories:', error);
       setCategories(placeholderCategories);
     }
-  };
+  }, [placeholderCategories]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const handleSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
-    console.log('Search term:', e.target.value);
   };
 
   const handleSearchFocus = () => {
     setShowSuggestions(true);
-    console.log('Search bar focused, showing suggestions');
+    document.getElementById('overlay').style.display = 'block';
   };
 
   const handleSearchBlur = () => {
     setTimeout(() => {
       setShowSuggestions(false);
-      console.log('Search bar lost focus, hiding suggestions');
+      document.getElementById('overlay').style.display = 'none';
     }, 200);
   };
 
   return (
     <div className="header">
+      <div id="overlay"></div>
       <img className="logo" src={logo} alt="PrimePicks Logo" />
-
       <div className="header__search" ref={searchRef}>
         <input
           className="header__searchInput"
@@ -81,9 +82,8 @@ function Header() {
           </div>
         )}
       </div>
-
       <div className="header__nav">
-        <div className="header__option">
+        <div className="header__option" onClick={() => navigate('/login')}>
           <span className="header__optionLineOne">Hello Guest</span>
           <span className="header__optionLineTwo">Sign In</span>
         </div>
@@ -105,3 +105,13 @@ function Header() {
 }
 
 export default Header;
+
+
+
+
+
+
+
+
+
+
