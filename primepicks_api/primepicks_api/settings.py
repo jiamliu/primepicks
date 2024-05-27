@@ -132,14 +132,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Django Rest Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
-# DRF and SimpleJWT Auth Config
-
+# Simple JWT Configuration
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -177,3 +177,4 @@ CORS_ALLOWED_ORIGINS = [
 
 # Uncomment the line below if you want to allow all origins (not recommended for production)
 # CORS_ALLOW_ALL_ORIGINS = True
+

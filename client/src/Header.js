@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import './Header.css';
 import logo from './primepicks.png';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './App'; // import UserContext
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,6 +13,7 @@ function Header() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
   const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext); // use UserContext
 
   const placeholderCategories = useRef(
     Array.from({ length: 10 }, (_, i) => ({
@@ -57,10 +59,18 @@ function Header() {
     }, 200);
   };
 
+  const handleSignOut = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    setUser(null);
+    navigate('/login');
+  };
+
   return (
     <div className="header">
       <div id="overlay"></div>
-      <img className="logo" src={logo} alt="PrimePicks Logo" />
+      <img className="logo" src={logo} alt="PrimePicks Logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
       <div className="header__search" ref={searchRef}>
         <input
           className="header__searchInput"
@@ -83,9 +93,9 @@ function Header() {
         )}
       </div>
       <div className="header__nav">
-        <div className="header__option" onClick={() => navigate('/login')}>
-          <span className="header__optionLineOne">Hello Guest</span>
-          <span className="header__optionLineTwo">Sign In</span>
+        <div className="header__option" onClick={user ? handleSignOut : () => navigate('/login')}>
+          <span className="header__optionLineOne">Hello {user ? user.username : 'Guest'}</span>
+          <span className="header__optionLineTwo">{user ? 'Sign Out' : 'Sign In'}</span>
         </div>
         <div className="header__option">
           <span className="header__optionLineOne">Returns</span>
@@ -105,6 +115,11 @@ function Header() {
 }
 
 export default Header;
+
+
+
+
+
 
 
 

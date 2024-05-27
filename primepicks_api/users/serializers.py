@@ -5,7 +5,7 @@ from .models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['address', 'phone_number']
+        fields = ['address', 'phone_number', 'email']
 
 class UserSerializer(serializers.ModelSerializer):
     userprofile = UserProfileSerializer()
@@ -26,8 +26,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password']
         )
-
-
-        UserProfile.objects.create(user=user)
+        UserProfile.objects.create(user=user, email=validated_data['email'])
         return user
+
 
