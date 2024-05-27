@@ -3,17 +3,19 @@ import './Header.css';
 import logo from './primepicks.png';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PlaceIcon from '@mui/icons-material/Place';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from './App'; // import UserContext
+import { UserContext } from './App';
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categories, setCategories] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [location, setLocation] = useState('Fetching location...');
   const searchRef = useRef(null);
   const navigate = useNavigate();
-  const { user, setUser } = useContext(UserContext); // use UserContext
+  const { user, setUser } = useContext(UserContext);
 
   const placeholderCategories = useRef(
     Array.from({ length: 10 }, (_, i) => ({
@@ -43,6 +45,21 @@ function Header() {
     fetchCategories();
   }, [fetchCategories]);
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
+        .then(response => response.json())
+        .then(data => {
+          setLocation(`Delivering to ${data.city} ${data.postcode}`);
+        })
+        .catch(error => {
+          console.error('Error fetching location:', error);
+          setLocation('Location not available');
+        });
+    });
+  }, []);
+
   const handleSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -67,10 +84,32 @@ function Header() {
     navigate('/login');
   };
 
+  const updateLocation = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
+        .then(response => response.json())
+        .then(data => {
+          setLocation(`Delivering to ${data.city} ${data.postcode}`);
+        })
+        .catch(error => {
+          console.error('Error fetching location:', error);
+          setLocation('Location not available');
+        });
+    });
+  };
+
   return (
     <div className="header">
       <div id="overlay"></div>
       <img className="logo" src={logo} alt="PrimePicks Logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
+      <div className="header__location" onClick={updateLocation}>
+        <PlaceIcon className="header__locationIcon" />
+        <div className="header__locationText">
+          <span>{location}</span>
+          <span className="header__updateLocation">Update location</span>
+        </div>
+      </div>
       <div className="header__search" ref={searchRef}>
         <input
           className="header__searchInput"
@@ -115,6 +154,9 @@ function Header() {
 }
 
 export default Header;
+
+
+
 
 
 
