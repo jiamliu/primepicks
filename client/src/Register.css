@@ -21,8 +21,9 @@
   }
   
   .register__container h1 {
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 20px;
+    text-align: left;
   }
   
   .register__container form h5 {

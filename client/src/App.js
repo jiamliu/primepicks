@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Header from './Header.js';
-import Home from './Home.js';
-import Login from './Login.js';
-import Register from './Register.js';
+import Header from './Header';
+import Home from './Home';
+import Login from './Login';
+import Register from './Register';
+import Categories from './Categories';  // Import Categories component
 
 export const UserContext = React.createContext();
 
 function App() {
   const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -27,6 +21,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/categories/:categoryId" element={<Categories />} /> {/* Add this route */}
           </Routes>
         </div>
       </Router>
@@ -35,4 +30,6 @@ function App() {
 }
 
 export default App;
+
+
 

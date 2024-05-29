@@ -1,0 +1,219 @@
+.categories-page {
+    display: flex;
+}
+
+.sidebar {
+    width: 15%; 
+    padding: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+.filter-section h4 {
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 900;
+    margin-top: 20px;
+}
+
+.price-slider {
+    position: relative;
+    width: 80%; 
+    margin: 0 auto;
+    height: 70px;
+    margin-left: 0px;
+}
+
+.range-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+    pointer-events: all;
+}
+
+.range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: red;
+    cursor: pointer;
+}
+
+.range-input::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: red;
+    cursor: pointer;
+}
+
+.price-slider .price-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.sort-by-rating .star-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    color: orange;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.sort-by-rating .star-label input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.sort-by-brand .brand-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.sort-by-brand .brand-label input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.products {
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.product-card {
+    width: 18%; 
+    padding: 5px;
+    box-sizing: border-box;
+    border: 1px solid whitesmoke;
+    margin: 10px;
+    background: white;
+    text-align: center;
+}
+
+.product-card img {
+    width: 90%;
+    height: auto;
+}
+
+.product-info {
+    padding: 20px 0;
+    margin-top: 1px;
+}
+
+.product-info .product-name {
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.product-info .product-description {
+    font-size: 10px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.price-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sale-price {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.original-price {
+    font-size: 11px;
+    text-decoration: line-through;
+    color: gray;
+}
+
+.discounted-price {
+    font-size: 10px;
+    font-weight: 500;
+    color: black;
+}
+
+.primepass-logo-container {
+    display: flex;
+    justify-content: flex-start;
+    width: 40%;
+    margin-top: 10px;
+}
+
+.primepass-logo {
+    width: 30px;
+    height: auto;
+}
+
+.delivery-info {
+    font-size: 11px;
+    color: black;
+    margin-top: 1px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.delivery-info .bold-date {
+    font-weight: 900;
+}
+
+.add-to-cart-button {
+    background-color: rgb(215, 11, 11);
+    color: white;
+    padding: 9px 18px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 20px; 
+    text-align: left; 
+    display: block; 
+    font-size: x-small;
+    font-weight: 900;
+}
+
+.add-to-cart-button:hover {
+    background-color: red;
+}
+
+.product-info .rating {
+    color: orange;
+    font-size: 0.75em;
+    margin-top: 10px;
+    text-align: left;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  

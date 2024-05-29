@@ -41,7 +41,7 @@ function Register() {
     <div className="register">
       <img className="register__logo" src={logo} alt="PrimePicks Logo" />
       <div className="register__container">
-        <h1>Create account</h1>
+        <h1>Create Account</h1>
         <form onSubmit={handleRegister}>
           <h5>Your name</h5>
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />

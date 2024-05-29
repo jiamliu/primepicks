@@ -3,10 +3,15 @@ from .models import Product, Review, ProductImage
 from categories.models import Category
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
     class Meta:
         model = ProductImage
-        fields = ['id', 'image', 'caption']
+        fields = ['id', 'image', 'caption', 'image_url']
 
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        return request.build_absolute_uri(obj.image.url)
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,10 +28,9 @@ class ProductSerializer(serializers.ModelSerializer):
     categories = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), many=True)
     images = ProductImageSerializer(many=True, read_only=True)
 
-
     class Meta:
         model = Product
-        fields = ['id', 'title', 'description', 'price', 'image', 'rating', 'categories', 'reviews']
+        fields = ['id', 'title', 'description', 'price', 'rating', 'categories', 'reviews', 'images']
 
     def create(self, validated_data):
         categories = validated_data.pop('categories')
@@ -39,4 +43,6 @@ class ProductSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
         instance.categories.set(categories)
         return instance
+
+
 

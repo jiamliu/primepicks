@@ -41,7 +41,7 @@ function Login() {
     <div className="login">
       <img className="login__logo" src={logo} alt="PrimePicks Logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
       <div className="login__container">
-        <h1>Sign-In</h1>
+        <h1>Sign In</h1>
         <form onSubmit={handleLogin}>
           <h5>Email</h5>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />

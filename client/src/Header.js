@@ -30,16 +30,14 @@ function Header() {
       const data = await response.json();
       if (Array.isArray(data)) {
         const sortedCategories = data.sort((a, b) => a.name.localeCompare(b.name));
-        const combinedCategories = [...sortedCategories, ...placeholderCategories].slice(0, 10);
-        setCategories(combinedCategories);
+        setCategories(sortedCategories);
       } else {
         console.error('Unexpected response format:', data);
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
-      setCategories(placeholderCategories);
     }
-  }, [placeholderCategories]);
+  }, []);
 
   useEffect(() => {
     fetchCategories();
@@ -103,7 +101,7 @@ function Header() {
     <div className="header">
       <div id="overlay"></div>
       <img className="logo" src={logo} alt="PrimePicks Logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
-      <div className="header__location" onClick={updateLocation}>
+      <div className="header__location" onClick={updateLocation} style={{ cursor: 'pointer' }}>
         <PlaceIcon className="header__locationIcon" />
         <div className="header__locationText">
           <span>{location}</span>
@@ -122,8 +120,8 @@ function Header() {
         <SearchIcon className="header__searchIcon" />
         {showSuggestions && categories.length > 0 && (
           <div className="header__searchSuggestions">
-            {categories.slice(0, 10).map((category) => (
-              <div key={category.id} className="header__searchSuggestion">
+            {categories.filter(cat => cat.name.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, 10).map((category) => (
+              <div key={category.id} className="header__searchSuggestion" onClick={() => navigate(`/categories/${category.id}`)}>
                 <TrendingUpIcon className="header__icon" />
                 {category.name}
               </div>
@@ -154,6 +152,7 @@ function Header() {
 }
 
 export default Header;
+
 
 
 
