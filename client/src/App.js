@@ -5,7 +5,8 @@ import Header from './Header';
 import Home from './Home';
 import Login from './Login';
 import Register from './Register';
-import Categories from './Categories';  // Import Categories component
+import Categories from './Categories';
+import { CartProvider } from './CartContext';
 
 export const UserContext = React.createContext();
 
@@ -14,17 +15,19 @@ function App() {
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      <Router>
-        <div className="app">
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/categories/:categoryId" element={<Categories />} /> {/* Add this route */}
-          </Routes>
-        </div>
-      </Router>
+      <CartProvider>
+        <Router>
+          <div className="app">
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/categories/:categoryId" element={<Categories />} />
+            </Routes>
+          </div>
+        </Router>
+      </CartProvider>
     </UserContext.Provider>
   );
 }

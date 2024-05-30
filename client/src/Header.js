@@ -7,6 +7,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './App';
+import { useCart } from './CartContext';
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,13 +17,7 @@ function Header() {
   const searchRef = useRef(null);
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
-
-  const placeholderCategories = useRef(
-    Array.from({ length: 10 }, (_, i) => ({
-      id: `placeholder-${i}`,
-      name: `Category ${i + 1}`,
-    }))
-  ).current;
+  const { cart } = useCart();
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -140,11 +135,11 @@ function Header() {
         </div>
         <div className="header__option">
           <span className="header__optionLineOne">Go</span>
-          <span className="header__optionLineTwo">Premium</span>
+          <span className="header__optionLineTwo">PrimePass</span>
         </div>
         <div className="header__optionBasket">
           <ShoppingCartIcon />
-          <span className="header__optionLineTwo header__basketCount">0</span>
+          <span className="header__optionLineTwo header__basketCount">{cart.length}</span>
         </div>
       </div>
     </div>
@@ -152,6 +147,8 @@ function Header() {
 }
 
 export default Header;
+
+
 
 
 

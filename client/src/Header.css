@@ -142,7 +142,18 @@
     display: none;
 }
 
-  
+.header__optionBasket {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+}
+
+.header__basketCount {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
   
 
 
