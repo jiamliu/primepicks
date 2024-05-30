@@ -27,10 +27,12 @@ class ProductSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, read_only=True)
     categories = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), many=True)
     images = ProductImageSerializer(many=True, read_only=True)
+    details = serializers.JSONField()
+    about = serializers.JSONField() 
 
     class Meta:
         model = Product
-        fields = ['id', 'title', 'description', 'price', 'rating', 'categories', 'reviews', 'images']
+        fields = ['id', 'title', 'description', 'price', 'rating', 'categories', 'reviews', 'images', 'details', 'about']
 
     def create(self, validated_data):
         categories = validated_data.pop('categories')
@@ -43,6 +45,7 @@ class ProductSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
         instance.categories.set(categories)
         return instance
+
 
 
 

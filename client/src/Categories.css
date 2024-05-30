@@ -202,7 +202,15 @@
     text-align: left;
 }
 
-
+.product-description-link {
+    text-decoration: none;
+    color: inherit; 
+  }
+  
+  .product-description-link:hover {
+    color: inherit;
+  }
+  
 
 
 

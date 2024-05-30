@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import './Categories.css';
 import primePassLogo from './primepass.png';
 import { useCart } from './CartContext';
@@ -149,7 +149,9 @@ const Categories = () => {
               {product.images.length > 0 && <img src={product.images[0].image_url} alt={product.title} />}
               <div className="product-info">
                 <h2 className="product-name">{product.title}</h2>
-                <div className="product-description">{product.description}</div>
+                <Link to={`/product/${product.id}`} className="product-description-link">
+                  <div className="product-description">{product.description}</div>
+                </Link>
                 <div className="rating">
                   {'★'.repeat(Math.round(product.rating))}
                   {'☆'.repeat(5 - Math.round(product.rating))}
@@ -177,6 +179,7 @@ const Categories = () => {
 };
 
 export default Categories;
+
 
 
 

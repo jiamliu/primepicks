@@ -9,6 +9,8 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/')
     rating = models.FloatField()
     categories = models.ManyToManyField(Category, related_name='products')
+    details = models.JSONField(default=dict, blank=True) 
+    about = models.JSONField(default=list, blank=True)  
 
     def __str__(self):
         return self.title
@@ -24,8 +26,11 @@ class Review(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images/')  
+    image = models.ImageField(upload_to='product_images/')
     caption = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f'Image for {self.product.title}'
+
+
+
