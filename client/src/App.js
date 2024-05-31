@@ -6,6 +6,7 @@ import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 import Categories from './Categories';
+import Products from './Products'; 
 import { CartProvider } from './CartContext';
 
 export const UserContext = React.createContext();
@@ -24,6 +25,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/categories/:categoryId" element={<Categories />} />
+              <Route path="/product/:productId" element={<Products />} />
             </Routes>
           </div>
         </Router>
