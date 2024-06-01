@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
-import './Login.css';
-import logo from './primepicks.png';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './App';
+import './Login.css';
+import logo from './primepicks.png';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -24,10 +24,10 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('access_token', data.access);
-        localStorage.setItem('refresh_token', data.refresh);
-        setUser(data.user);
+        localStorage.setItem('token', data.access);  // Here to store the access token
+        localStorage.setItem('refresh', data.refresh);  // Here to store the refresh token
+        localStorage.setItem('user', JSON.stringify(data.user));  // Here to store user data
+        setUser({ ...data.user, token: data.access });
         navigate('/');
       } else {
         console.error('Login failed:', data);
@@ -59,6 +59,20 @@ function Login() {
 }
 
 export default Login;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -19,6 +19,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Review
         fields = ['id', 'product', 'user', 'content', 'rating']
@@ -28,7 +30,7 @@ class ProductSerializer(serializers.ModelSerializer):
     categories = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), many=True)
     images = ProductImageSerializer(many=True, read_only=True)
     details = serializers.JSONField()
-    about = serializers.JSONField() 
+    about = serializers.JSONField()
 
     class Meta:
         model = Product
@@ -45,6 +47,7 @@ class ProductSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
         instance.categories.set(categories)
         return instance
+
 
 
 

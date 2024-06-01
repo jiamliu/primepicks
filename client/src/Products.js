@@ -38,50 +38,52 @@ const Products = () => {
     setSelectedImage(image);
   };
 
-  const handleReviewSubmit = () => {
+  const handleReviewSubmit = async () => {
     if (!user) {
       navigate('/login');
       return;
     }
 
-    // Log token information
-    console.log('Token:', user.token);
+    const accessToken = localStorage.getItem('token');
+    console.log("Access Token from Local Storage: ", accessToken);
+
+    if (!accessToken) {
+      console.error('No token found, please login again');
+      navigate('/login');
+      return;
+    }
 
     const requestOptions = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Token ${user.token}` // Make sure the token is correctly formatted
+        'Authorization': `Bearer ${accessToken}`
       },
       body: JSON.stringify({
         rating: newReview.rating,
         content: newReview.content,
         product: productId,
-        user: user.id
-      })
+      }),
     };
 
-    // Log request options for debugging
-    console.log('Request Options:', requestOptions);
-
-    fetch('http://127.0.0.1:8000/api/products/reviews/', requestOptions)
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(data => {
-            throw new Error(data.detail || 'Failed to submit review');
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        setReviews([...reviews, data]);
-        setShowReviewForm(false);
-        setNewReview({ rating: 0, content: '' });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setError(error.message);
-      });
+    try {
+      let response = await fetch('http://127.0.0.1:8000/api/products/reviews/', requestOptions);
+      console.log("Review Submit Response Status: ", response.status);
+      if (response.status === 401) {
+        console.error('Unauthorized, token might be expired');
+        navigate('/login');
+        return;
+      }
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+      const data = await response.json();
+      setReviews([...reviews, data]);
+      setShowReviewForm(false);
+      setNewReview({ rating: 0, content: '' });
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -210,7 +212,7 @@ const Products = () => {
                   <textarea name="content" value={newReview.content} onChange={handleInputChange}></textarea>
                 </label>
                 <button onClick={handleReviewSubmit}>Submit Review</button>
-                <button className="cancel" onClick={() => setShowReviewForm(false)}>Cancel</button>
+                <button onClick={() => setShowReviewForm(false)}>Cancel</button>
               </div>
             </div>
           )}
@@ -221,22 +223,3 @@ const Products = () => {
 };
 
 export default Products;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

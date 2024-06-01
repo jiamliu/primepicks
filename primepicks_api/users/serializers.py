@@ -29,4 +29,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         UserProfile.objects.create(user=user, email=validated_data['email'])
         return user
 
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
 
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+        try:
+            username = User.objects.get(email=email).username
+            user = authenticate(username=username, password=password)
+            if user:
+                data['user'] = user
+                return data
+        except User.DoesNotExist:
+            pass
+        raise serializers.ValidationError("Invalid credentials")

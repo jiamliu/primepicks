@@ -1,14 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.authentication import JWTAuthentication  # Import JWTAuthentication
 from .models import Product, Review
 from .serializers import ProductSerializer, ReviewSerializer
-import logging
-
-logger = logging.getLogger(__name__)
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -27,16 +23,36 @@ class ProductViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
+    authentication_classes = [JWTAuthentication]
 
     def perform_create(self, serializer):
+        product_id = self.request.data.get('product')
         user = self.request.user
-        logger.debug(f'User: {user}, Authenticated: {user.is_authenticated}')
+
         if not user.is_authenticated:
-            logger.error('Authentication credentials were not provided.')
-            return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+            raise ValidationError("Authentication credentials were not provided.")
+
+        if Review.objects.filter(product_id=product_id, user=user).exists():
+            raise ValidationError("You have already reviewed this product.")
+
         serializer.save(user=user)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
