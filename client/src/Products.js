@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './Products.css';
 import { UserContext } from './App';
 
+const profilePictureUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png?20221210150350';
+
 const Products = () => {
   const { productId } = useParams();
   const { user } = useContext(UserContext);
@@ -86,9 +88,50 @@ const Products = () => {
     }
   };
 
+
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewReview(prevState => ({ ...prevState, [name]: value }));
+  };
+
+
+
+  const calculateAverageRating = (reviews) => {
+    if (reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1);
+  };
+
+
+
+  const calculateRatingPercentages = (reviews) => {
+    const totalReviews = reviews.length;
+    const starCounts = [1, 0, 0, 0, 0]; 
+    reviews.forEach(review => {
+      starCounts[review.rating - 1]++;
+    });
+
+    return starCounts.map(count => ((count / totalReviews) * 100).toFixed(1));
+  };
+
+  const averageRating = calculateAverageRating(reviews);
+  const ratingPercentages = calculateRatingPercentages(reviews);
+
+
+
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    
+    return (
+      <>
+        {Array(fullStars).fill().map((_, i) => <span key={`full-${i}`} className="star">★</span>)}
+        {halfStar && <span className="star half">★</span>}
+        {Array(emptyStars).fill().map((_, i) => <span key={`empty-${i}`} className="star empty">★</span>)}
+      </>
+    );
   };
 
   if (error) {
@@ -130,9 +173,8 @@ const Products = () => {
         <div className="product-info-section">
           <h1>{product.description}</h1>
           <div className="product-rating">
-            {Array(Math.round(product.rating)).fill('★').join('')}
-            {Array(5 - Math.round(product.rating)).fill('☆').join('')}
-            <span>{product.rating}</span>
+            {renderStars(averageRating)}
+            <span>{averageRating}</span>
           </div>
           <div className="product-price">${product.price}</div>
           <div className="product-brand">
@@ -173,49 +215,73 @@ const Products = () => {
           </div>
         </div>
       </div>
-      <div className="product-reviews">
-        <h2>Customer reviews</h2>
-        <div className="review-overview">
-          <div className="average-rating">{product.rating} out of 5</div>
-          <div className="total-reviews">{reviews.length} global ratings</div>
-        </div>
-        <div className="reviews-list">
-          {reviews.map(review => (
-            <div key={review.id} className="review-item">
-              <div className="review-header">
-                <span className="review-rating">
-                  {Array(review.rating).fill('★').join('')}
-                  {Array(5 - review.rating).fill('☆').join('')}
-                </span>
-                <span className="review-user">by {review.user.username}</span>
+      <div className="review-section">
+        <div className="customer-review-summary">
+          <h2>Customer Reviews</h2>
+          <div className="average-rating-summary">
+            <span className="star-summary">{renderStars(averageRating)}</span>
+            <span>{averageRating} out of 5</span>
+          </div>
+          <div>{reviews.length} global ratings</div>
+          <div className="rating-breakdown">
+            {[5, 4, 3, 2, 1].map(star => (
+              <div key={star} className="rating-row">
+                <span>{star} star</span>
+                <div className="rating-bar">
+                  <div
+                    className="filled-bar"
+                    style={{ width: `${ratingPercentages[star - 1]}%` }}
+                  ></div>
+                </div>
+                <span>{ratingPercentages[star - 1]}%</span>
               </div>
-              <div className="review-content">{review.content}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <div className="review-form">
-          <button onClick={() => setShowReviewForm(true)}>Write a customer review</button>
-          {showReviewForm && (
-            <div className="review-modal">
-              <div className="review-modal-content">
-                <h3>Write a Review</h3>
-                <label>
-                  Rating:
-                  <select name="rating" value={newReview.rating} onChange={handleInputChange}>
-                    {[1, 2, 3, 4, 5].map(star => (
-                      <option key={star} value={star}>{star}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Review:
-                  <textarea name="content" value={newReview.content} onChange={handleInputChange}></textarea>
-                </label>
-                <button onClick={handleReviewSubmit}>Submit Review</button>
-                <button onClick={() => setShowReviewForm(false)}>Cancel</button>
+        <div className="product-reviews">
+          <h2>Top Reviews</h2>
+          <div className="reviews-list">
+            {reviews.map(review => (
+              <div key={review.id} className="review-item">
+                <div className="review-header">
+                  <div className="profile-picture" style={{ backgroundImage: `url(${profilePictureUrl})` }}></div>
+                  <div className="review-user-details">
+                    <span className="review-user">{review.user}</span>
+                    <span className="review-rating">
+                      {renderStars(review.rating)}
+                    </span>
+                    <span className="review-date">Reviewed on {new Date(review.created_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <div className="review-content">{review.content}</div>
+                <div className="review-purchase">Verified Purchase</div>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
+          <div className="review-form">
+            <button onClick={() => setShowReviewForm(true)}>Write a customer review</button>
+            {showReviewForm && (
+              <div className="review-modal">
+                <div className="review-modal-content">
+                  <h3>Write a Review</h3>
+                  <label>
+                    Rating:
+                    <select name="rating" value={newReview.rating} onChange={handleInputChange}>
+                      {[1, 2, 3, 4, 5].map(star => (
+                        <option key={star} value={star}>{star}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    Review:
+                    <textarea name="content" value={newReview.content} onChange={handleInputChange}></textarea>
+                  </label>
+                  <button onClick={handleReviewSubmit}>Submit Review</button>
+                  <button onClick={() => setShowReviewForm(false)}>Cancel</button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -223,3 +289,4 @@ const Products = () => {
 };
 
 export default Products;
+
